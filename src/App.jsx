@@ -7,10 +7,8 @@ const supabaseKey = 'sb_publishable_bwT8FbETDWdJXWtRbv7D_A_3nvpZ31A'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 const CSS = `
-// Pakeisk importo eilutę savo CSS kintamajame:
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap&subset=latin-ext');;
 
-/* SVARBU: Vite numatytųjų stilių atšaukimas, kad kompiuteryje puslapis užpildytų visą ekraną */
 html, body, #root {
   width: 100% !important;
   max-width: 100% !important;
@@ -34,7 +32,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .nav-logo{font-family:'Fraunces',serif;font-weight:900;font-size:1.35rem;color:var(--brown);letter-spacing:-.02em}
 .nav-logo em{font-style:normal;color:var(--accent)}
 .nav-right{display:flex;gap:.7rem;align-items:center}
-.nav-admin{background:none;border:1px solid var(--border);color:var(--mid);font-family:inherit;font-size:.8rem;padding:.4rem .85rem;border-radius:7px;cursor:pointer}
 .nav-cta{background:var(--accent);color:#fff;font-family:inherit;font-size:.85rem;font-weight:600;padding:.55rem 1.4rem;border-radius:8px;border:none;cursor:pointer}
 .nav-cta:hover{background:#bf4f2b}
 .hero{min-height:100vh;padding:8rem 5% 5rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
@@ -68,15 +65,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .btn{display:block;width:100%;background:var(--accent);color:#fff;font-family:inherit;font-size:1rem;font-weight:600;padding:.92rem;border-radius:9px;border:none;cursor:pointer;margin-top:.2rem}
 .btn:hover{background:#bf4f2b;transform:translateY(-2px)}
 .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.overlay{position:fixed;inset:0;background:rgba(46,26,15,.6);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;animation:overlayIn .2s ease}
-.modal{background:var(--cream);border-radius:24px;padding:2.8rem 2.4rem 2.4rem;max-width:420px;width:100%;box-shadow:0 32px 80px rgba(46,26,15,.3);text-align:center;animation:modalIn .35s cubic-bezier(.34,1.56,.64,1)}
-.modal-icon{font-size:3.5rem;margin-bottom:1rem;display:block}
-.modal-title{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.6rem}
-.modal-sub{font-size:.95rem;color:var(--mid);line-height:1.75;margin-bottom:1.6rem;font-weight:300}
-.modal-sub strong{color:var(--brown);font-weight:600}
-.modal-btn{display:block;width:100%;background:var(--accent);color:#fff;font-family:inherit;font-size:1rem;font-weight:600;padding:.92rem;border-radius:10px;border:none;cursor:pointer;margin-bottom:.75rem}
-.modal-btn:hover{background:#bf4f2b}
-.modal-close{font-size:.82rem;color:var(--gray);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
 .phone{background:var(--brown);border-radius:34px;padding:1.4rem 1.05rem 1.9rem;box-shadow:0 28px 70px rgba(46,26,15,.26);width:215px;flex-shrink:0;margin:0 auto}
 .phone-notch{width:58px;height:5px;border-radius:3px;background:rgba(255,255,255,.12);margin:0 auto 1.1rem}
 .phone-screen{background:var(--cream);border-radius:22px;padding:.9rem;display:flex;flex-direction:column;gap:.5rem}
@@ -103,8 +91,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .hb-f{height:100%;border-radius:3px}
 .hb-f.k{background:var(--accent)}.hb-f.p{background:var(--green)}.hb-f.f{background:#e09040}.hb-f.c{background:#5b9bd5}
 .hb-v{font-size:.5rem;font-weight:700;color:var(--brown);width:22px;text-align:right}
-.hc-badge good{background:var(--gl);color:var(--green)}
-.hc-badge warn{background:#fff8e1;color:#b7791f}
+.hc-badge.good{background:var(--gl);color:var(--green)}
+.hc-badge.warn{background:#fff8e1;color:#b7791f}
 .ub{background:#fff;border-radius:9px 9px 9px 2px;padding:.42rem .58rem;font-size:.62rem;color:var(--mid);line-height:1.46;max-width:90%}
 .ab{background:linear-gradient(135deg,var(--accent),#c04f28);border-radius:2px 9px 9px 9px;padding:.5rem .64rem;color:#fff;max-width:94%;align-self:flex-end}
 .ab-lbl{font-size:.48rem;letter-spacing:.07em;text-transform:uppercase;opacity:.75;margin-bottom:.12rem}
@@ -156,7 +144,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .prog-screen-title{font-family:'Fraunces',serif;font-size:.82rem;font-weight:700;color:var(--brown)}
 .prog-screen-sub{font-size:.6rem;color:var(--gray)}
 .prog-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.2rem 0}
-.prog-ring-liko{font-size:.65rem;color:var(--mid);font-weight:500}
 .prog-ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
 .prog-ring-num{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:900;color:var(--brown);line-height:1;white-space:nowrap}
 .prog-ring-unit{font-size:.48rem;color:var(--gray);margin-top:1px}
@@ -204,6 +191,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .footer{padding:1.6rem 6%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--gray)}
 .footer-logo{font-family:'Fraunces',serif;font-weight:900;font-size:1.05rem;color:var(--brown)}
 .footer-logo em{font-style:normal;color:var(--accent)}
+.footer-right{display:flex;gap:1.5rem;align-items:center}
+.footer-link{color:var(--gray);text-decoration:none;cursor:pointer}
+.footer-link:hover{color:var(--accent);text-decoration:underline}
 .admin-login{min-height:100vh;background:linear-gradient(135deg,#1a0f06,#3d2010);display:flex;align-items:center;justify-content:center;padding:1rem}
 .admin-login-box{background:var(--cream);border-radius:22px;padding:2.8rem 2.4rem;max-width:380px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.45);margin:0 auto}
 .alinput{width:100%;padding:.88rem 1rem;border:2px solid rgba(122,79,53,.2);border-radius:10px;font-family:inherit;font-size:.95rem;background:var(--cream);color:var(--brown);outline:none;margin-bottom:.8rem;box-sizing:border-box}
@@ -232,7 +222,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .admin-table tr:hover td{background:var(--cream)}
 .admin-empty{padding:3rem;text-align:center;color:var(--gray);font-size:.9rem}
 
-/* Planšečių pritaikymas - kad telefonų atvaizdai nesusiliestų */
 @media(max-width:1024px){
   .hero-row{grid-template-columns:1fr 1fr;justify-items:center}
   .hero-row .phone:last-child{display:none}
@@ -495,7 +484,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [regName, setRegName] = useState("");
   const [adminAuthed, setAdminAuthed] = useState(false);
   const [tapCount, setTapCount] = useState(0);
@@ -516,7 +504,15 @@ export default function App() {
     return () => s.remove();
   }, []);
 
-  const scrollToForm = () => document.getElementById("reg-form")?.scrollIntoView({behavior:"smooth",block:"center"});
+  const scrollToForm = () => {
+    if (page !== "landing") {
+      setPage("landing");
+      setTimeout(() => document.getElementById("reg-form")?.scrollIntoView({behavior:"smooth",block:"center"}), 100);
+    } else {
+      document.getElementById("reg-form")?.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+  };
+
   const handleSecretTap = () => {
     setTapCount(prev => {
       const next = prev + 1;
@@ -549,6 +545,47 @@ export default function App() {
     return <AdminPanel regs={regs} onBack={() => setPage("landing")}/>;
   }
 
+  if (page === "privacy") return (
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#1a0f06,#3d2010)",display:"flex",alignItems:"center",justifyContent:"center",padding:"2rem 1rem",fontFamily:"system-ui,sans-serif"}}>
+      <div style={{background:"#fdf8f2",borderRadius:24,padding:"3rem 2.5rem",maxWidth:600,width:"100%",boxShadow:"0 32px 80px rgba(0,0,0,.45)"}}>
+        <h1 style={{fontFamily:"'Fraunces',serif",fontSize:"2rem",fontWeight:900,color:"#2e1a0f",marginBottom:"1.5rem",display:"flex",alignItems:"center",gap:".8rem"}}>
+          <span style={{fontSize:"1.8rem"}}>🛡️</span> Privatumo politika
+        </h1>
+        
+        <div style={{fontSize:".95rem",color:"#7a4f35",lineHeight:1.8,display:"flex",flexDirection:"column",gap:"1.2rem"}}>
+          <p>
+            <strong>1. Tikslas ir Rinkos Testavimas</strong><br/>
+            Ši interneto svetainė yra skirta <strong style={{color:"#2e1a0f"}}>Maistė.</strong> projekto idėjos validacijai ir rinkos potencialo tyrimui. Svetainės tikslas – nustatyti vartotojų susidomėjimą būsima paslauga bei surinkti bandomąją grupę asmenų, norinčių išbandyti programėlės prototipą.
+          </p>
+
+          <p>
+            <strong>2. Renkami Duomenys</strong><br/>
+            Mes renkame minimalų kiekį asmens duomenų: jūsų el. pašto adresą bei (pasirinktinai) vardą. Šie duomenys yra saugomi saugioje duomenų bazėje, naudojant Supabase infrastruktūrą.
+          </p>
+
+          <p>
+            <strong>3. Duomenų Naudojimas</strong><br/>
+            Surinkta informacija bus naudojama išskirtinai šiems tikslams:
+            <ul style={{marginTop:".5rem", paddingLeft:"1.2rem"}}>
+              <li>Informuoti jus el. paštu apie programėlės startą.</li>
+              <li>Pasiūlyti galimybę išbandyti prototipą.</li>
+              <li>Gauti jūsų atsiliepimus (feedback), kurie padėtų tobulinti projektą.</li>
+            </ul>
+          </p>
+
+          <p>
+            <strong>4. Jūsų Teisės ir Duomenų Trynimas</strong><br/>
+            Mes vertiname jūsų privatumą ir užtikriname, kad jūsų duomenys nebus perleisti trečiosioms šalims. Jūs turite teisę bet kuriuo metu pareikalauti, kad jūsų duomenys būtų neatstatomai ištrinti iš mūsų sistemų. Norėdami tai padaryti, tiesiog parašykite mums laisvos formos el. laišką adresu: <strong style={{color:"#d9603a"}}>maisteapp@gmail.com</strong>.
+          </p>
+        </div>
+
+        <button onClick={() => {setPage("landing"); window.scrollTo(0,0);}} style={{marginTop:"2.5rem", width:"100%",background:"#d9603a",color:"#fff",fontFamily:"inherit",fontSize:"1rem",fontWeight:700,padding:".92rem",borderRadius:12,border:"none",cursor:"pointer",transition:"background .2s"}}>
+          ← Grįžti į pagrindinį puslapį
+        </button>
+      </div>
+    </div>
+  );
+
   if (page === "thanks") return (
     <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#1a0f06,#3d2010)",display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",fontFamily:"system-ui,sans-serif"}}>
       <div style={{background:"#fdf8f2",borderRadius:22,padding:"2.8rem 2.4rem",maxWidth:380,width:"100%",textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,.45)"}}>
@@ -568,7 +605,7 @@ export default function App() {
   return (
     <>
       <nav className="nav">
-        <div className="nav-logo">Maistė<em>.</em></div>
+        <div className="nav-logo" style={{cursor:"pointer"}} onClick={() => {setPage("landing"); window.scrollTo(0,0);}}>Maistė<em>.</em></div>
         <div className="nav-right">
           <button className="nav-cta" onClick={scrollToForm}>Būkite tarp pirmų</button>
         </div>
@@ -598,7 +635,9 @@ export default function App() {
               <div className="fg"><label>El. paštas <span className="req">*</span></label><input type="email" placeholder="jusu@gmail.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
                 <div className="fg"><label>Vardas <span style={{fontWeight:400,opacity:.6}}>(neprivaloma)</span></label><input type="text" placeholder="Jūsų vardas" value={name} onChange={e=>setName(e.target.value)}/></div>
                 <button onClick={handleSubmit} className="btn" disabled={loading}>{loading?"Siunčiama...":"Noriu išbandyti →"}</button>
-                <p className="hf-note">🔒 Jokio spam'o. Ištrinsime jūsų duomenis bet kuriuo metu.</p>
+                <p className="hf-note">
+                🔒 <span style={{fontWeight: 700, color: "var(--brown)"}}>Jokio spam'o</span>, tik demo versija. Ištrinsime jūsų duomenis bet kuriuo metu, kreipkites: <span style={{fontWeight: 700, color: "var(--brown)"}}>maisteapp@gmail.com</span>.
+                </p>
             </div>
             <PhoneAI/>
           </div>
@@ -662,9 +701,9 @@ export default function App() {
       <section className="feat-section">
         <div className="feat-col">
           <div>
-            <p className="sec-tag" style={{fontSize:".72rem",fontWeight:600,letterSpacing:".1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:".55rem"}}>Asmeniniai tikslai</p>
-            <h2 style={{fontFamily:"'Fraunces',serif",fontSize:"clamp(1.7rem,3.5vw,2.4rem)",fontWeight:900,lineHeight:1.15,letterSpacing:"-.02em",marginBottom:".9rem"}}>Nustatykite tikslą ir programa prisitaikys</h2>
-            <p style={{fontSize:".97rem",lineHeight:1.8,color:"var(--mid)",fontWeight:300,marginBottom:"1.2rem",maxWidth:520}}>Nesvarbu, ar norite numesti, palaikyti ar priaugti svorio — programa apskaičiuoja tinkamą kalorijų normą.</p>
+            <p className="sec-tag">Asmeniniai tikslai</p>
+            <h2 className="sec-title">Nustatykite tikslą ir programa prisitaikys</h2>
+            <p className="sec-body">Nesvarbu, ar norite numesti, palaikyti ar priaugti svorio — programa apskaičiuoja tinkamą kalorijų normą.</p>
             <ul className="feat-list">
               <li>Kalorijų norma pagal svorį, ūgį ir amžių</li>
               <li>Tinka norintiems numesti arba priaugti svorio</li>
@@ -692,7 +731,10 @@ export default function App() {
 
       <footer className="footer">
         <div className="footer-logo" onClick={handleSecretTap} style={{cursor:"default",userSelect:"none"}}>Maistė<em>.</em></div>
-        <div>© 2026 Maistė · Lietuviška mitybos programėlė</div>
+        <div className="footer-right">
+          <span className="footer-link" onClick={() => {setPage("privacy"); window.scrollTo(0,0);}}>Privatumo politika</span>
+          <span>© 2026 Maistė · Lietuviška mitybos programėlė</span>
+        </div>
       </footer>
     </>
   );
