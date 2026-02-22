@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
+import { createClient } from '@supabase/supabase-js'
+
+// Šiuos duomenis rasi Supabase -> Settings -> API
+const supabaseUrl = 'https://hzktkqocwjcvewnbkgxo.supabase.co'
+const supabaseKey = 'sb_publishable_bwT8FbETDWdJXWtRbv7D_A_3nvpZ31A'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+// Pakeisk importo eilutę savo CSS kintamajame:
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap&subset=latin-ext');;
 
 /* SVARBU: Vite numatytųjų stilių atšaukimas, kad kompiuteryje puslapis užpildytų visą ekraną */
 html, body, #root {
@@ -96,9 +103,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 .hb-f{height:100%;border-radius:3px}
 .hb-f.k{background:var(--accent)}.hb-f.p{background:var(--green)}.hb-f.f{background:#e09040}.hb-f.c{background:#5b9bd5}
 .hb-v{font-size:.5rem;font-weight:700;color:var(--brown);width:22px;text-align:right}
-.hc-badge{display:inline-block;font-size:.5rem;font-weight:700;padding:.16rem .42rem;border-radius:20px;margin-top:.34rem}
-.hc-badge.good{background:var(--gl);color:var(--green)}
-.hc-badge.warn{background:#fff8e1;color:#b7791f}
+.hc-badge good{background:var(--gl);color:var(--green)}
+.hc-badge warn{background:#fff8e1;color:#b7791f}
 .ub{background:#fff;border-radius:9px 9px 9px 2px;padding:.42rem .58rem;font-size:.62rem;color:var(--mid);line-height:1.46;max-width:90%}
 .ab{background:linear-gradient(135deg,var(--accent),#c04f28);border-radius:2px 9px 9px 9px;padding:.5rem .64rem;color:#fff;max-width:94%;align-self:flex-end}
 .ab-lbl{font-size:.48rem;letter-spacing:.07em;text-transform:uppercase;opacity:.75;margin-bottom:.12rem}
@@ -452,7 +458,7 @@ function AdminPanel({ regs, onBack }) {
           <div className="admin-stats">
             <div className="admin-stat"><div className="admin-stat-n">{regs.length}</div><div className="admin-stat-l">Iš viso registracijų</div></div>
             <div className="admin-stat"><div className="admin-stat-n">{regs.filter(r=>r.name).length}</div><div className="admin-stat-l">Nurodė vardą</div></div>
-            <div className="admin-stat"><div className="admin-stat-n">{regs.length > 0 ? fmt(regs[regs.length-1].created_at).split(" ")[0] : "—"}</div><div className="admin-stat-l">Paskutinė registracija</div></div>
+            <div className="admin-stat"><div className="admin-stat-n">{regs.length > 0 ? fmt(regs[0].created_at).split(" ")[0] : "—"}</div><div className="admin-stat-l">Paskutinė registracija</div></div>
           </div>
           <div className="admin-table-wrap">
             <div className="admin-table-head">
@@ -465,8 +471,8 @@ function AdminPanel({ regs, onBack }) {
               <table className="admin-table">
                 <thead><tr><th>#</th><th>El. paštas</th><th>Vardas</th><th>Data</th></tr></thead>
                 <tbody>
-                  {[...regs].reverse().map((r,i)=>(
-                    <tr key={r.id}>
+                  {regs.map((r,i)=>(
+                    <tr key={r.id || i}>
                       <td style={{color:"var(--gray)",fontSize:".8rem"}}>{regs.length-i}</td>
                       <td><strong>{r.email}</strong></td>
                       <td style={{color:r.name?"var(--brown)":"var(--gray)"}}>{r.name||"—"}</td>
@@ -494,10 +500,19 @@ export default function App() {
   const [adminAuthed, setAdminAuthed] = useState(false);
   const [tapCount, setTapCount] = useState(0);
 
+  const fetchRegs = async () => {
+    const { data, error } = await supabase
+      .from('registrations')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error && data) setRegs(data);
+  };
+
   useEffect(() => {
     const s = document.createElement("style");
     s.textContent = CSS;
     document.head.appendChild(s);
+    fetchRegs();
     return () => s.remove();
   }, []);
 
@@ -510,19 +525,23 @@ export default function App() {
     });
   };
 
-  const handleSubmit = () => {
-    if (!email) return;
+  const handleSubmit = async () => {
+    if (!email || loading) return;
+    setLoading(true);
+    
     const dn = name.trim() || email.split("@")[0];
-    const em = email;
-    const nm = name.trim();
-    setRegs(prev => {
-      if (prev.find(r => r.email.toLowerCase() === em.toLowerCase())) return prev;
-      return [...prev, { email: em, name: nm||null, id: Date.now(), created_at: new Date().toISOString() }];
-    });
-    setRegName(dn);
-    setEmail('');
-    setName('');
-    setPage("thanks");
+    const { error } = await supabase
+      .from('registrations')
+      .insert([{ email: email, name: name.trim() || null }]);
+
+    if (!error) {
+      setRegName(dn);
+      setEmail('');
+      setName('');
+      setPage("thanks");
+      fetchRegs();
+    }
+    setLoading(false);
   };
 
   if (page === "admin") {
@@ -540,9 +559,6 @@ export default function App() {
         <div style={{fontSize:".88rem",color:"#7a4f35",lineHeight:1.7,marginBottom:"1.6rem"}}>
           Esate tarp pirmų, kurie išbandys <strong style={{color:"#2e1a0f"}}>Maistė.</strong><br/>
           Parašysime kai programa bus paruošta. 🌿
-        </div>
-        <div style={{background:"#f6ede0",borderRadius:10,padding:".85rem 1rem",textAlign:"left",marginBottom:"1.2rem",border:"1px solid rgba(122,79,53,.13)"}}>
-          
         </div>
         <button onClick={() => setPage("landing")} style={{width:"100%",background:"#d9603a",color:"#fff",fontFamily:"inherit",fontSize:"1rem",fontWeight:700,padding:".92rem",borderRadius:10,border:"none",cursor:"pointer"}}>← Grįžti į puslapį</button>
       </div>
@@ -581,7 +597,7 @@ export default function App() {
               <p className="hf-desc">Būsite tarp pirmų, kurie išbandys programėlę.</p>
               <div className="fg"><label>El. paštas <span className="req">*</span></label><input type="email" placeholder="jusu@gmail.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
                 <div className="fg"><label>Vardas <span style={{fontWeight:400,opacity:.6}}>(neprivaloma)</span></label><input type="text" placeholder="Jūsų vardas" value={name} onChange={e=>setName(e.target.value)}/></div>
-                <button onClick={handleSubmit} className="btn">{loading?"Siunčiama...":"Noriu išbandyti →"}</button>
+                <button onClick={handleSubmit} className="btn" disabled={loading}>{loading?"Siunčiama...":"Noriu išbandyti →"}</button>
                 <p className="hf-note">🔒 Jokio spam'o. Ištrinsime jūsų duomenis bet kuriuo metu.</p>
             </div>
             <PhoneAI/>
@@ -676,7 +692,7 @@ export default function App() {
 
       <footer className="footer">
         <div className="footer-logo" onClick={handleSecretTap} style={{cursor:"default",userSelect:"none"}}>Maistė<em>.</em></div>
-        <div>© 2026 Maistė · Lietuviška AI programėlė</div>
+        <div>© 2026 Maistė · Lietuviška mitybos programėlė</div>
       </footer>
     </>
   );
