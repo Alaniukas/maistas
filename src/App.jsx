@@ -534,7 +534,7 @@ export default function App() {
     <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#1a0f06,#3d2010)",display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",fontFamily:"system-ui,sans-serif"}}>
       <div style={{background:"#fdf8f2",borderRadius:22,padding:"2.8rem 2.4rem",maxWidth:380,width:"100%",textAlign:"center",boxShadow:"0 32px 80px rgba(0,0,0,.45)"}}>
         <div style={{fontSize:"2.5rem",marginBottom:".5rem"}}>🎉</div>
-        <div style={{fontFamily:"'Fraunces',serif",fontWeight:900,fontSize:"1.5rem",color:"#2e1a0f",marginBottom:".2rem"}}>
+        <div style={{fontFamily:"'Fraunces',sans-serif",fontWeight:900,fontSize:"1.5rem",color:"#2e1a0f",marginBottom:".2rem"}}>
           Ačiū, {regName}!
         </div>
         <div style={{fontSize:".88rem",color:"#7a4f35",lineHeight:1.7,marginBottom:"1.6rem"}}>
@@ -542,9 +542,7 @@ export default function App() {
           Parašysime kai programa bus paruošta. 🌿
         </div>
         <div style={{background:"#f6ede0",borderRadius:10,padding:".85rem 1rem",textAlign:"left",marginBottom:"1.2rem",border:"1px solid rgba(122,79,53,.13)"}}>
-          <div style={{fontSize:".65rem",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:"#a08878",marginBottom:".5rem"}}>📬 Susisiekite</div>
-          <div style={{fontSize:".87rem",color:"#2e1a0f",marginBottom:".3rem"}}>📧 <a href="mailto:labas@maiste.lt" style={{color:"#d9603a",fontWeight:600,textDecoration:"none"}}>labas@maiste.lt</a></div>
-          <div style={{fontSize:".87rem",color:"#2e1a0f"}}>💬 <a href="https://instagram.com/maiste.lt" target="_blank" style={{color:"#d9603a",fontWeight:600,textDecoration:"none"}}>@maiste.lt</a></div>
+          
         </div>
         <button onClick={() => setPage("landing")} style={{width:"100%",background:"#d9603a",color:"#fff",fontFamily:"inherit",fontSize:"1rem",fontWeight:700,padding:".92rem",borderRadius:10,border:"none",cursor:"pointer"}}>← Grįžti į puslapį</button>
       </div>
