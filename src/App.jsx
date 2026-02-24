@@ -616,7 +616,12 @@ export default function App() {
         <div className="page-col">
           <p className="hero-eyebrow fu">Nauja lietuviška programėlė — <span style={{fontFamily:"'Fraunces',serif",fontWeight:900}}>Maistė<em style={{fontStyle:"normal",color:"var(--accent)"}}>.</em></span></p>
           <h1 className="hero-h1 fu1">Žinokite, ką valgote.<br/><em>Kiekvieną dieną.</em></h1>
-          <p className="hero-sub fu2">Nufotografuokite bet ką — ir AI akimirksniu atpažįsta maistą. Pamiršk varginančią teksto paiešką ar kalorijų lenteles — <strong>tiesiog nufotografuok ir viskas.</strong> Paprasta, greita ir malonu. 🌿</p>
+          <p className="hero-sub fu2">Nauja programėlė, sukurta tik <strong>Lietuvai!</strong> <br />  
+          Atpažįsta lietuvišką maistą, bendrauja lietuviškai ir veikia su pažangia DI integracija. {" "}
+          <strong> Nufotografuok </strong> patiekalą ir akimirksniu sužinok kalorijas, maistinę vertę bei porcijos dydį. {" "}
+          Gauk <strong>individualius</strong> mitybos planus, naudingus patarimus ir išmanų AI padėjėją kasdieniams sprendimams. <br />
+          Greita. {" "} Paprasta. {" "} Lietuviška.  🌿
+          </p>
           <div className="hero-chips fu3">
             <div className="chip">📸 Nuotrauka arba tekstas</div>
             <div className="chip">🇱🇹 Lietuviški patiekalai</div>
