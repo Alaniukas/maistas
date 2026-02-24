@@ -614,7 +614,19 @@ export default function App() {
       <section className="hero">
         <div className="blob b1"/><div className="blob b2"/><div className="blob b3"/>
         <div className="page-col">
-          <p className="hero-eyebrow fu">Nauja lietuviška programėlė — <span style={{fontFamily:"'Fraunces',serif",fontWeight:900}}>Maistė<em style={{fontStyle:"normal",color:"var(--accent)"}}>.</em></span></p>
+  {/* Pakeičiame <p> į <div> konteinerį, kad galėtume turėti dvi atskiras eilutes */}
+  <div className="hero-eyebrow-container fu">
+    {/* Pirma eilutė: "Maistė." */}
+    <div className="hero-eyebrow-title">
+      <span style={{ fontFamily: "'Fraunces', serif", fontWeight: 900, fontSize: '1.2rem' }}>
+        Maistė<em style={{ fontStyle: "normal", color: "var(--accent)" }}>.</em>
+      </span>
+    </div>
+    {/* Antra eilutė: "Nauja lietuviška programėlė" */}
+    <div className="hero-eyebrow-subtitle">
+      Nauja lietuviška programėlė
+    </div>
+  </div>
           <h1 className="hero-h1 fu1">Žinokite, ką valgote.<br/><em>Kiekvieną dieną.</em></h1>
           <p className="hero-sub fu2">Nauja programėlė, sukurta tik <strong>Lietuvai!</strong> <br />  
           Atpažįsta lietuvišką maistą, bendrauja lietuviškai ir veikia su pažangia DI integracija. {" "}
