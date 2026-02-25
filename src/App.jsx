@@ -277,9 +277,9 @@ function PhoneAI() {
       <div className="phone-screen">
         <div className="ps-head">AI padėjėjas 🤖</div>
         <div className="ub">Ar galiu vakare suvalgyti sūrelį?</div>
-        <div className="ab"><div className="ab-lbl">Maistė AI</div><div className="ab-txt">Taip! Liko 370 kcal. Varškės sūrelis ~130 kcal 🧀</div></div>
+        <div className="ab"><div className="ab-lbl">Maistė DI</div><div className="ab-txt">Taip! Liko 370 kcal. Varškės sūrelis ~130 kcal 🧀</div></div>
         <div className="ub">Kiek kalorijų šaltibarščiuose?</div>
-        <div className="ab"><div className="ab-lbl">Maistė AI</div><div className="ab-txt">400ml — apie 180–220 kcal 🥣</div></div>
+        <div className="ab"><div className="ab-lbl">Maistė DI</div><div className="ab-txt">400ml — apie 180–220 kcal 🥣</div></div>
       </div>
     </div>
   );
@@ -361,13 +361,13 @@ function AIChatMockup() {
     <div className="chat-mockup">
       <div className="chat-header">
         <div className="chat-avatar">🤖</div>
-        <div><div className="chat-hname">Maistė AI</div></div>
+        <div><div className="chat-hname">Maistė DI</div></div>
       </div>
       <div className="chat-body">
         <div className="chat-msg user"><div className="chat-who">Jūs</div><div className="chat-bubble">Ką galiu valgyti vakarienei? Liko apie 400 kcal.</div></div>
-        <div className="chat-msg ai"><div className="chat-who">Maistė AI</div><div className="chat-bubble">Kiaušinienė su daržovėmis (~280 kcal) ir graikiškas jogurtas (~120 kcal) 🥚🥗</div></div>
+        <div className="chat-msg ai"><div className="chat-who">Maistė DI</div><div className="chat-bubble">Kiaušinienė su daržovėmis (~280 kcal) ir graikiškas jogurtas (~120 kcal) 🥚🥗</div></div>
         <div className="chat-msg user"><div className="chat-who">Jūs</div><div className="chat-bubble">O jei noriu kažko saldaus?</div></div>
-        <div className="chat-msg ai"><div className="chat-who">Maistė AI</div><div className="chat-bubble">Jogurtas su medum ir uogomis — tik ~180 kcal 🍯🫐</div></div>
+        <div className="chat-msg ai"><div className="chat-who">Maistė DI</div><div className="chat-bubble">Jogurtas su medum ir uogomis — tik ~180 kcal 🍯🫐</div></div>
       </div>
       <div className="chat-footer">
         <div className="chat-input-box">Rašykite klausimą...</div>
@@ -631,13 +631,13 @@ export default function App() {
           <p className="hero-sub fu2">Nauja programėlė, sukurta tik <strong>Lietuvai!</strong> <br />  
           Atpažįsta lietuvišką maistą, bendrauja lietuviškai ir veikia su pažangia DI integracija. {" "}
           <strong> Nufotografuok </strong> patiekalą ir akimirksniu sužinok kalorijas, maistinę vertę bei porcijos dydį. {" "}
-          Gauk <strong>individualius</strong> mitybos planus, naudingus patarimus ir išmanų AI padėjėją kasdieniams sprendimams. <br />
+          Gauk <strong>individualius</strong> mitybos planus, naudingus patarimus ir išmanų DI padėjėją kasdieniams sprendimams. <br />
           Greita. {" "} Paprasta. {" "} Lietuviška.  🌿
           </p>
           <div className="hero-chips fu3">
             <div className="chip">📸 Nuotrauka arba tekstas</div>
             <div className="chip">🇱🇹 Lietuviški patiekalai</div>
-            <div className="chip">🤖 AI padėjėjas</div>
+            <div className="chip">🤖 DI padėjėjas</div>
             <div className="chip">⚡ Rezultatas per 5s</div>
           </div>
           <div className="hero-pills fu3">
@@ -665,11 +665,11 @@ export default function App() {
         <div className="sec-inner">
           <div>
             <p className="sec-tag">Kaip tai veikia?</p>
-            <h2 className="sec-title">Nufotografuokite —<br/><em>AI parodo dienos likutį.</em></h2>
-            <p className="sec-body">Nebereikia ieškoti kalorijų lentelėse. <strong>Tiesiog nufotografuokite</strong> ką valgote. AI atpažįsta ir <strong>suskaičiuoja viską per sekundes.</strong></p>
+            <h2 className="sec-title">Nufotografuokite —<br/><em>DI parodo dienos likutį.</em></h2>
+            <p className="sec-body">Nebereikia ieškoti kalorijų lentelėse. <strong>Tiesiog nufotografuokite</strong> ką valgote. DI atpažįsta ir <strong>suskaičiuoja viską per sekundes.</strong></p>
             <div className="steps">
               <div className="step"><div className="step-n">1</div><div className="step-t"><strong>Atidarykite kamerą</strong> ir nukreipkite į maistą</div></div>
-              <div className="step"><div className="step-n">2</div><div className="step-t"><strong>AI atpažįsta patiekalą</strong> automatiškai</div></div>
+              <div className="step"><div className="step-n">2</div><div className="step-t"><strong>DI atpažįsta patiekalą</strong> automatiškai</div></div>
               <div className="step"><div className="step-n">3</div><div className="step-t"><strong>Matote kalorijas, makroelementus</strong> ir sveikumo lygį</div></div>
             </div>
           </div>
@@ -686,9 +686,9 @@ export default function App() {
       <section className="sec white">
         <div className="sec-inner rev">
           <div>
-            <p className="sec-tag">AI padėjėjas</p>
+            <p className="sec-tag">DI padėjėjas</p>
             <h2 className="sec-title">Klauskite kaip<br/><em>gero draugo.</em></h2>
-            <p className="sec-body"><strong>Tiesiog paklauskite lietuviškai</strong> — AI atsako per sekundes.</p>
+            <p className="sec-body"><strong>Tiesiog paklauskite lietuviškai</strong> — DI atsako per sekundes.</p>
             <div className="ai-examples">
               <div className="ai-ex">💬 <strong>„Kiek kalorijų šaltibarščiuose?"</strong></div>
               <div className="ai-ex">💬 <strong>„Ar galiu dar suvalgyti sūrelį?"</strong></div>
@@ -707,7 +707,7 @@ export default function App() {
             <p className="sec-body">Matykite kiek suvalgėte ir kiek liko — realiu laiku.</p>
             <ul className="feat-list">
               <li>Aiški dienos suvestinė vienoje vietoje</li>
-              <li>AI pataria ką valgyti pagal likusį balansą</li>
+              <li>DI pataria ką valgyti pagal likusį balansą</li>
               <li>Savaitiniai ir mėnesiniai grafikai</li>
             </ul>
           </div>
@@ -739,7 +739,7 @@ export default function App() {
             <p className="gs-sub">Programa sukurta taip, kad naudotis būtų paprasta ir malonu</p>
           </div>
           <div className="gs-grid">
-            {[["📸","Maisto nuotraukos","Nufotografuokite patiekalą ir AI suskaičiuos kalorijas."],["🇱🇹","Lietuviški patiekalai","Cepelinai, šaltibarščiai, kugelis ir šimtai kitų valgių."],["🤖","AI patarimai","Klauskite AI bet kurį mitybos klausimą lietuviškai."],["🎯","Asmeniniai tikslai","Programa prisitaiko prie jūsų tikslo."],["📊","Progresas ir grafikai","Dienos, savaitės ir mėnesio suvestinės."],["🔔","Priminimai","Programa primena įvesti valgius."]].map(([icon,title,desc])=>(
+            {[["📸","Maisto nuotraukos","Nufotografuokite patiekalą ir DI suskaičiuos kalorijas."],["🇱🇹","Lietuviški patiekalai","Cepelinai, šaltibarščiai, kugelis ir šimtai kitų valgių."],["🤖","DI patarimai","Klauskite DI bet kurį mitybos klausimą lietuviškai."],["🎯","Asmeniniai tikslai","Programa prisitaiko prie jūsų tikslo."],["📊","Progresas ir grafikai","Dienos, savaitės ir mėnesio suvestinės."],["🔔","Priminimai","Programa primena įvesti valgius."]].map(([icon,title,desc])=>(
               <div className="gs-card" key={title}><span className="gs-icon">{icon}</span><h3>{title}</h3><p>{desc}</p></div>
             ))}
           </div>
