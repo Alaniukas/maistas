@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 SVARBU: Atsakyk TIKTAI lietuviškai. Būk draugiškas, glaustas ir praktiškas.
 Kalbėk TIKTAI apie mitybą, maistą, svorio reguliavimą ir susijusias sveikatos temas.
 Jei klausiama apie nesusijusias temas – mandagiai nukreipk atgal į mitybą.
-Atsakymai turi būti TRUMPI – ne daugiau 3-4 sakiniai arba trumpas sąrašas.
+Atsakymai turi būti TRUMPI – ne daugiau 3 sakiniai arba trumpas sąrašas. Visada baik pilnais, užbaigtais sakiniais. Niekada nekirpk sakinio viduryje.
 
 ŠIANDIEN VARTOTOJO DUOMENYS:
 - Vardas: ${userContext?.name || 'vartotojas'}
@@ -49,7 +49,7 @@ Jei klausia ar viršijo limitą – pasakyk konkrečiai pagal duomenis.`;
       contents,
       config: {
         systemInstruction,
-        maxOutputTokens: 350,
+        maxOutputTokens: 500,
         temperature: 0.6,
       },
     });

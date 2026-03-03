@@ -17,7 +17,6 @@ import { Dashboard } from '@/components/Dashboard';
 import { FoodEntry } from '@/components/FoodEntry';
 import { WeightProgress } from '@/components/WeightProgress';
 import { DailyCheckin } from '@/components/DailyCheckin';
-import { MealSelector } from '@/components/MealSelector';
 import { Settings } from '@/components/Settings';
 import { Gamification } from '@/components/Gamification';
 import { ChatBot } from '@/components/ChatBot';
@@ -87,8 +86,7 @@ export default function App() {
   const [gameState, setGameState] = useState<GamificationState>(INITIAL_GAME);
 
   const [currentView, setCurrentView] = useState<View>('dashboard');
-  const [selectedMeal, setSelectedMeal] = useState<MealType>('breakfast');
-  const [showMealSelector, setShowMealSelector] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState<MealType | null>(null);
   const [showCheckin, setShowCheckin] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [editingItem, setEditingItem] = useState<FoodItem | null>(null);
@@ -271,9 +269,9 @@ export default function App() {
         serving_size: item.servingSize,
         unit: item.unit,
         source: item.source,
-        meal_type: selectedMeal,
+        meal_type: item.meal,
       }).eq('id', item.id);
-      setTodayItems((prev) => prev.map((i) => i.id === item.id ? { ...item, meal: selectedMeal } : i));
+      setTodayItems((prev) => prev.map((i) => i.id === item.id ? item : i));
     } else {
       const { data: newRow } = await supabase.from('food_entries').insert({
         user_id: userId,
@@ -290,7 +288,7 @@ export default function App() {
         serving_size: item.servingSize,
         unit: item.unit,
         source: item.source,
-        meal_type: selectedMeal,
+        meal_type: item.meal,
         entry_timestamp: Date.now(),
       }).select().single();
       if (newRow) setTodayItems((prev) => [...prev, mapFoodEntry(newRow as Record<string, unknown>)]);
@@ -298,7 +296,7 @@ export default function App() {
 
     setEditingItem(null);
     setCurrentView('dashboard');
-  }, [userId, selectedMeal, editingItem, todayDate]);
+  }, [userId, editingItem, todayDate]);
 
   const handleRemoveFood = useCallback(async (itemId: string) => {
     await supabase.from('food_entries').delete().eq('id', itemId);
@@ -487,13 +485,6 @@ export default function App() {
         />
       )}
 
-      {/* Meal Selector */}
-      <MealSelector
-        isOpen={showMealSelector}
-        onClose={() => setShowMealSelector(false)}
-        onSelect={(meal) => { setShowMealSelector(false); openAddFood(meal); }}
-      />
-
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-100 px-2 py-2 flex justify-around items-center z-20 pb-safe">
         <NavBtn
@@ -511,7 +502,7 @@ export default function App() {
 
         {/* Center Add Button */}
         <button
-          onClick={() => setShowMealSelector(true)}
+          onClick={() => { setSelectedMeal(null); setCurrentView('addFood'); }}
           className="flex items-center justify-center -mt-8 bg-primary-500 text-white w-16 h-16 rounded-full shadow-xl shadow-primary-200 border-4 border-white active:scale-95 transition-transform"
         >
           <PlusCircle size={30} />

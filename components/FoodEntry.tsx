@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 interface Props {
   onAdd: (item: FoodItem) => void;
   onCancel: () => void;
-  mealType: MealType;
+  mealType: MealType | null;
   initialItem?: FoodItem | null;
 }
 
@@ -34,6 +34,7 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
   const [analyzing, setAnalyzing] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [tab, setTab] = useState<'search' | 'camera' | 'manual'>('search');
+  const [showMealPicker, setShowMealPicker] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -152,6 +153,8 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
     }
   };
 
+  const [pendingManualItem, setPendingManualItem] = useState<FoodItem | null>(null);
+
   const handleAddManual = () => {
     if (!manual.name || !manual.calories) { toast.error('Įveskite pavadinimą ir kalorijas'); return; }
     const item: FoodItem = {
@@ -166,13 +169,18 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
       servingSize: 100,
       unit: 'g',
       source: 'manual',
-      meal: mealType,
+      meal: mealType ?? 'breakfast',
       timestamp: Date.now(),
     };
-    onAdd(item);
+    if (!mealType) {
+      setPendingManualItem(item);
+      setShowMealPicker(true);
+    } else {
+      onAdd(item);
+    }
   };
 
-  const handleAdd = () => {
+  const buildAndAdd = (meal: MealType) => {
     if (!selected) return;
     const item: FoodItem = {
       id: initialItem?.id || `${selected.id}-${Date.now()}`,
@@ -181,13 +189,29 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
       servingSize: serving,
       unit: selected.unit,
       source: selected.source,
-      meal: mealType,
+      meal,
       timestamp: Date.now(),
     };
     onAdd(item);
   };
 
+  const handleAdd = () => {
+    if (!selected) return;
+    if (!mealType) {
+      setShowMealPicker(true);
+      return;
+    }
+    buildAndAdd(mealType);
+  };
+
   const calcNutrient = (val: number) => Math.round(val * serving / 100);
+
+  const MEAL_OPTIONS: { type: MealType; label: string; emoji: string }[] = [
+    { type: 'breakfast', label: 'Pusryčiai', emoji: '🌅' },
+    { type: 'lunch', label: 'Pietūs', emoji: '☀️' },
+    { type: 'dinner', label: 'Vakarienė', emoji: '🌙' },
+    { type: 'snack', label: 'Užkandžiai', emoji: '🍎' },
+  ];
 
   return (
     <div className="min-h-screen bg-primary-50 pb-24">
@@ -198,9 +222,39 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
         </button>
         <div>
           <h2 className="font-semibold text-gray-800">{initialItem ? 'Redaguoti' : 'Pridėti maistą'}</h2>
-          <p className="text-xs text-gray-400">{MEAL_LABELS[mealType]}</p>
+          <p className="text-xs text-gray-400">{mealType ? MEAL_LABELS[mealType] : 'Pasirinksite valgymo laiką pridedant'}</p>
         </div>
       </div>
+
+      {/* Meal picker overlay */}
+      {showMealPicker && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setShowMealPicker(false)}>
+          <div className="w-full max-w-md bg-white rounded-t-3xl p-6 pb-10" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+            <p className="text-center font-semibold text-gray-800 mb-4">Kuriam valgymo laikui?</p>
+            <div className="grid grid-cols-2 gap-3">
+              {MEAL_OPTIONS.map(m => (
+                <button
+                  key={m.type}
+                  onClick={() => {
+                    setShowMealPicker(false);
+                    if (pendingManualItem) {
+                      onAdd({ ...pendingManualItem, meal: m.type });
+                      setPendingManualItem(null);
+                    } else {
+                      buildAndAdd(m.type);
+                    }
+                  }}
+                  className="flex items-center gap-3 px-4 py-4 bg-primary-50 rounded-2xl active:scale-95 transition-transform border border-primary-100"
+                >
+                  <span className="text-2xl">{m.emoji}</span>
+                  <span className="font-semibold text-gray-700 text-sm">{m.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="p-4 max-w-md mx-auto space-y-4">
         {/* Tabs */}

@@ -77,8 +77,12 @@ export function ChatBot({ isOpen, onClose, userProfile, dailyTargets, todayLog }
     };
   };
 
+  const wordCount = (text: string) => text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+  const WORD_LIMIT = 70;
+
   const send = async (text: string) => {
     if (!text.trim() || loading) return;
+    if (wordCount(text) > WORD_LIMIT) return;
     const userMsg: ChatMessage = { role: 'user', content: text };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
@@ -168,23 +172,30 @@ export function ChatBot({ isOpen, onClose, userProfile, dailyTargets, todayLog }
       </div>
 
       {/* Input */}
-      <div className="px-4 py-3 bg-white border-t border-gray-100 flex gap-2 items-center shrink-0">
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send(input)}
-          placeholder="Rašykite klausimą apie mitybą..."
-          className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary-300"
-        />
-        <button
-          onClick={() => send(input)}
-          disabled={!input.trim() || loading}
-          className="w-10 h-10 bg-primary-500 text-white rounded-full flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shadow-md shadow-primary-200"
-        >
-          <Send size={16} />
-        </button>
+      <div className="px-4 py-3 bg-white border-t border-gray-100 shrink-0">
+        <div className="flex gap-2 items-center">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send(input)}
+            placeholder="Rašykite klausimą apie mitybą..."
+            className={`flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 ${wordCount(input) > WORD_LIMIT ? 'focus:ring-red-300 ring-2 ring-red-300' : 'focus:ring-primary-300'}`}
+          />
+          <button
+            onClick={() => send(input)}
+            disabled={!input.trim() || loading || wordCount(input) > WORD_LIMIT}
+            className="w-10 h-10 bg-primary-500 text-white rounded-full flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shadow-md shadow-primary-200 shrink-0"
+          >
+            <Send size={16} />
+          </button>
+        </div>
+        {wordCount(input) > 0 && (
+          <p className={`text-right text-[11px] mt-1 pr-1 ${wordCount(input) > WORD_LIMIT ? 'text-red-400 font-medium' : 'text-gray-300'}`}>
+            {wordCount(input)}/{WORD_LIMIT} žodžių
+          </p>
+        )}
       </div>
     </div>
   );
