@@ -78,19 +78,19 @@ export function Onboarding({ user, onUpdate, onComplete }: Props) {
               <label className="block">
                 <span className="text-sm text-gray-500 mb-1 block">Amžius</span>
                 <input type="number" value={user.age || ''} onChange={e => onUpdate({ age: +e.target.value })}
-                  placeholder="25"
+                  placeholder=""
                   className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300" />
               </label>
               <label className="block">
                 <span className="text-sm text-gray-500 mb-1 block">Ūgis (cm)</span>
                 <input type="number" value={user.height || ''} onChange={e => onUpdate({ height: +e.target.value })}
-                  placeholder="170"
+                  placeholder=""
                   className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300" />
               </label>
               <label className="block">
                 <span className="text-sm text-gray-500 mb-1 block">Svoris (kg)</span>
                 <input type="number" value={user.currentWeight || ''} onChange={e => onUpdate({ currentWeight: +e.target.value })}
-                  placeholder="70"
+                  placeholder=""
                   className="w-full border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300" />
               </label>
             </div>
@@ -150,7 +150,7 @@ export function Onboarding({ user, onUpdate, onComplete }: Props) {
                 type="number"
                 value={user.goalWeight || ''}
                 onChange={e => onUpdate({ goalWeight: +e.target.value })}
-                placeholder="65"
+                placeholder=""
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
               />
             </label>
