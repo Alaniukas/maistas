@@ -27,11 +27,11 @@ type View = 'dashboard' | 'addFood' | 'weight' | 'settings' | 'plan';
 
 const INITIAL_USER: UserProfile = {
   name: '',
-  age: 28,
-  height: 170,
-  currentWeight: 75,
+  age: 0,
+  height: 0,
+  currentWeight: 0,
   weightHistory: [],
-  goalWeight: 65,
+  goalWeight: 0,
   activityLevel: ActivityLevel.SEDENTARY,
   goalType: GoalType.LOSE_WEIGHT,
   goalSpeed: GoalSpeed.NORMAL,
