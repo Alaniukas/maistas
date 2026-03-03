@@ -36,3 +36,8 @@ body {
   background: #fbcfe8;
   border-radius: 2px;
 }
+
+@keyframes scanline {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}

@@ -32,6 +32,7 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
   const [searching, setSearching] = useState(false);
   const [estimating, setEstimating] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [tab, setTab] = useState<'search' | 'camera' | 'manual'>('search');
   const [showMealPicker, setShowMealPicker] = useState(false);
@@ -118,11 +119,13 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
     setAnalyzing(true);
-    setTab('search');
+    setSelected(null);
     try {
       const reader = new FileReader();
       reader.onload = async (ev) => {
-        const base64 = (ev.target?.result as string).split(',')[1];
+        const dataUrl = ev.target?.result as string;
+        setPhotoPreview(dataUrl);
+        const base64 = dataUrl.split(',')[1];
         try {
           const res = await fetch('/api/analyze-food', {
             method: 'POST',
@@ -140,7 +143,6 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
             source: 'gemini',
           };
           handleSelectResult(result);
-          toast.success(`Atpažinta: ${data.name}`);
         } catch {
           toast.error('Klaida analizuojant nuotrauką');
         }
@@ -353,36 +355,66 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
         {/* Camera tab */}
         {tab === 'camera' && (
           <div className="space-y-3">
-            {/* Premium badge */}
-            <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5">
-              <span className="text-amber-500 text-base">👑</span>
-              <p className="text-xs text-amber-700 font-medium">Premium funkcija – šiuo metu nemokama!</p>
-            </div>
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+              {/* Photo preview or placeholder */}
+              <div className="relative w-full aspect-[4/3] bg-gray-900 flex items-center justify-center overflow-hidden">
+                {photoPreview ? (
+                  <>
+                    <img src={photoPreview} alt="Nuotrauka" className="w-full h-full object-cover" />
+                    {analyzing && (
+                      <>
+                        {/* Scan line animation */}
+                        <div className="absolute inset-0 bg-black/30" />
+                        <div
+                          className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary-400 to-transparent"
+                          style={{ animation: 'scanline 1.8s ease-in-out infinite' }}
+                        />
+                        {/* Corner brackets */}
+                        <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-primary-400 rounded-tl" />
+                        <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-primary-400 rounded-tr" />
+                        <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-primary-400 rounded-bl" />
+                        <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-primary-400 rounded-br" />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                          <Loader2 size={32} className="text-primary-400 animate-spin" />
+                          <p className="text-white text-sm font-medium">AI analizuoja...</p>
+                        </div>
+                      </>
+                    )}
+                    {!analyzing && selected && (
+                      <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-sm rounded-xl px-3 py-2 flex items-center gap-2">
+                        <span className="text-green-400 text-base">✓</span>
+                        <p className="text-white text-sm font-semibold truncate">{selected.name}</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center gap-3 text-gray-500">
+                    <Camera size={40} className="text-gray-600" />
+                    <p className="text-sm text-gray-400">Nuotrauka bus rodoma čia</p>
+                  </div>
+                )}
+              </div>
 
-            <div className="bg-white rounded-2xl p-5 shadow-sm text-center space-y-4">
-              <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto">
-                <Camera size={28} className="text-primary-400" />
+              {/* Bottom controls */}
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                  <span className="text-amber-500 text-sm">👑</span>
+                  <p className="text-xs text-amber-700 font-medium">Premium funkcija – šiuo metu nemokama!</p>
+                </div>
+                <label className="block">
+                  <span className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer active:scale-95 transition-transform shadow-md
+                    ${analyzing ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-primary-500 text-white shadow-primary-200'}`}>
+                    {analyzing ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
+                    {analyzing ? 'Analizuojama...' : photoPreview ? 'Nufotografuoti iš naujo' : 'Pasirinkti nuotrauką'}
+                  </span>
+                  <input
+                    type="file" accept="image/*" capture="environment"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                    disabled={analyzing}
+                  />
+                </label>
               </div>
-              <div>
-                <p className="font-semibold text-gray-700 mb-1">Nufotografuokite maistą</p>
-                <p className="text-xs text-gray-400">AI atpažins produktą ir apskaičiuos maistinę vertę automatiškai</p>
-              </div>
-              <label className="block">
-                <span className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer active:scale-95 transition-transform shadow-md
-                  ${analyzing ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-primary-500 text-white shadow-primary-200'}`}>
-                  {analyzing ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
-                  {analyzing ? 'Analizuojama...' : 'Pasirinkti nuotrauką'}
-                </span>
-                <input
-                  type="file" accept="image/*" capture="environment"
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                  disabled={analyzing}
-                />
-              </label>
-              {analyzing && (
-                <p className="text-xs text-gray-400 animate-pulse">AI analizuoja nuotrauką, palaukite...</p>
-              )}
             </div>
           </div>
         )}
