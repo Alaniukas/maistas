@@ -33,6 +33,7 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
   const [estimating, setEstimating] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoItems, setPhotoItems] = useState<FoodSearchResult[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [tab, setTab] = useState<'search' | 'camera' | 'manual'>('search');
   const [showMealPicker, setShowMealPicker] = useState(false);
@@ -120,6 +121,7 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
     if (!file) return;
     setAnalyzing(true);
     setSelected(null);
+    setPhotoItems([]);
     try {
       const reader = new FileReader();
       reader.onload = async (ev) => {
@@ -134,15 +136,19 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
           });
           const data = await res.json();
           if (data.error) { toast.error('Nepavyko išanalizuoti'); setAnalyzing(false); return; }
-          const result: FoodSearchResult = {
-            id: `gemini-photo-${Date.now()}`,
-            name: data.name,
-            nutrition: { calories: data.calories, protein: data.protein, carbs: data.carbs, fat: data.fat },
-            servingSize: data.estimatedServing || 100,
+          const items: FoodSearchResult[] = (data.items || []).map((item: { name: string; calories: number; protein: number; carbs: number; fat: number; estimatedServing?: number }, i: number) => ({
+            id: `gemini-photo-${Date.now()}-${i}`,
+            name: item.name,
+            nutrition: { calories: item.calories, protein: item.protein, carbs: item.carbs, fat: item.fat },
+            servingSize: item.estimatedServing || 100,
             unit: 'g',
-            source: 'gemini',
-          };
-          handleSelectResult(result);
+            source: 'gemini' as const,
+          }));
+          if (items.length === 1) {
+            handleSelectResult(items[0]);
+          } else {
+            setPhotoItems(items);
+          }
         } catch {
           toast.error('Klaida analizuojant nuotrauką');
         }
@@ -243,6 +249,20 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
                     if (pendingManualItem) {
                       onAdd({ ...pendingManualItem, meal: m.type });
                       setPendingManualItem(null);
+                    } else if (photoItems.length > 1) {
+                      photoItems.forEach((item) => {
+                        onAdd({
+                          id: `${item.id}-${Date.now()}`,
+                          name: item.name,
+                          nutrition: item.nutrition,
+                          servingSize: item.servingSize,
+                          unit: item.unit,
+                          source: item.source,
+                          meal: m.type,
+                          timestamp: Date.now(),
+                        });
+                      });
+                      setPhotoItems([]);
                     } else {
                       buildAndAdd(m.type);
                     }
@@ -386,6 +406,12 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
                         <p className="text-white text-sm font-semibold truncate">{selected.name}</p>
                       </div>
                     )}
+                    {!analyzing && photoItems.length > 1 && (
+                      <div className="absolute bottom-3 left-3 right-3 bg-black/60 backdrop-blur-sm rounded-xl px-3 py-2 flex items-center gap-2">
+                        <span className="text-green-400 text-base">✓</span>
+                        <p className="text-white text-sm font-semibold">{photoItems.length} produktai atpažinti</p>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div className="flex flex-col items-center gap-3 text-gray-500">
@@ -416,6 +442,59 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
                 </label>
               </div>
             </div>
+
+            {/* Multiple photo items */}
+            {photoItems.length > 1 && (
+              <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold text-gray-800 text-sm">✨ Atpažinti produktai</p>
+                  <button onClick={() => setPhotoItems([])} className="text-gray-300 hover:text-gray-500"><X size={16} /></button>
+                </div>
+                <div className="space-y-2">
+                  {photoItems.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between bg-gray-50 rounded-xl px-3 py-2.5">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-700 truncate">{item.name}</p>
+                        <p className="text-xs text-gray-400">
+                          {Math.round(item.nutrition.calories * item.servingSize / 100)} kcal · {item.servingSize}g
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleSelectResult(item)}
+                        className="ml-2 text-xs text-primary-500 font-medium shrink-0 active:scale-90 transition-transform"
+                      >
+                        Pasirinkti
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => {
+                    if (!mealType) {
+                      setShowMealPicker(true);
+                    } else {
+                      photoItems.forEach((item) => {
+                        const foodItem: FoodItem = {
+                          id: `${item.id}-${Date.now()}`,
+                          name: item.name,
+                          nutrition: item.nutrition,
+                          servingSize: item.servingSize,
+                          unit: item.unit,
+                          source: item.source,
+                          meal: mealType,
+                          timestamp: Date.now(),
+                        };
+                        onAdd(foodItem);
+                      });
+                      setPhotoItems([]);
+                    }
+                  }}
+                  className="w-full py-3 bg-primary-500 text-white rounded-xl text-sm font-semibold active:scale-95 transition-transform"
+                >
+                  Pridėti viską ({photoItems.length})
+                </button>
+              </div>
+            )}
           </div>
         )}
 

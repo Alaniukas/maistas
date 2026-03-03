@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI, Type } from '@google/genai';
 
-const nutritionSchema = {
+const foodItemSchema = {
   type: Type.OBJECT,
   properties: {
     name: { type: Type.STRING, description: 'Maisto pavadinimas lietuviškai' },
@@ -10,9 +10,20 @@ const nutritionSchema = {
     carbs: { type: Type.NUMBER, description: 'Angliavandeniai (g) per 100g' },
     fat: { type: Type.NUMBER, description: 'Riebalai (g) per 100g' },
     estimatedServing: { type: Type.NUMBER, description: 'Numatomas porcijos dydis gramais' },
-    description: { type: Type.STRING, description: 'Trumpas maisto aprašymas' },
   },
   required: ['name', 'calories', 'protein', 'carbs', 'fat', 'estimatedServing'],
+};
+
+const nutritionSchema = {
+  type: Type.OBJECT,
+  properties: {
+    items: {
+      type: Type.ARRAY,
+      description: 'Visi nuotraukoje matomi maisto produktai ar patiekalai',
+      items: foodItemSchema,
+    },
+  },
+  required: ['items'],
 };
 
 export async function POST(req: NextRequest) {
@@ -40,10 +51,10 @@ export async function POST(req: NextRequest) {
               },
             },
             {
-              text: `Identifikuok maistą šioje nuotraukoje ir pateik maistinę vertę.
+              text: `Identifikuok VISUS maisto produktus ar patiekalus šioje nuotraukoje.
+              Jei ant lėkštės yra keli skirtingi patiekalai ar produktai – grąžink kiekvieną atskirai.
               Jei tai pakuotė su maistine lentele – nuskaityk ją tiksliai.
-              Jei tai patiekalas – įvertink ingredientus ir pateik apytikslę vertę.
-              Grąžink duomenis per 100g produkto ir numatymą porcijos dydžiui.`,
+              Kiekvienam produktui pateik maistinę vertę per 100g ir numatomą porcijos dydį.`,
             },
           ],
         },
@@ -52,7 +63,8 @@ export async function POST(req: NextRequest) {
         responseMimeType: 'application/json',
         responseSchema: nutritionSchema,
         systemInstruction: `Tu esi profesionalus dietologas, išmanantis lietuvišką rinką ir produktus.
-        Atpažink maistą tiksliai. Naudok lietuviškus pavadinimus.`,
+        Atpažink VISUS maisto produktus nuotraukoje. Jei matai kelis skirtingus patiekalus ar produktus – išvardyk kiekvieną atskirai.
+        Naudok lietuviškus pavadinimus.`,
       },
     });
 
