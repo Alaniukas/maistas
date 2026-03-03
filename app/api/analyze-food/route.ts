@@ -29,22 +29,25 @@ export async function POST(req: NextRequest) {
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: {
-        parts: [
-          {
-            inlineData: {
-              mimeType,
-              data: base64Image,
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
+              inlineData: {
+                mimeType,
+                data: base64Image,
+              },
             },
-          },
-          {
-            text: `Identifikuok maistą šioje nuotraukoje ir pateik maistinę vertę.
-            Jei tai pakuotė su maistine lentele – nuskaityk ją tiksliai.
-            Jei tai patiekalas – įvertink ingredientus ir pateik apytikslę vertę.
-            Grąžink duomenis per 100g produkto ir numatymą porcijos dydžiui.`,
-          },
-        ],
-      },
+            {
+              text: `Identifikuok maistą šioje nuotraukoje ir pateik maistinę vertę.
+              Jei tai pakuotė su maistine lentele – nuskaityk ją tiksliai.
+              Jei tai patiekalas – įvertink ingredientus ir pateik apytikslę vertę.
+              Grąžink duomenis per 100g produkto ir numatymą porcijos dydžiui.`,
+            },
+          ],
+        },
+      ],
       config: {
         responseMimeType: 'application/json',
         responseSchema: nutritionSchema,

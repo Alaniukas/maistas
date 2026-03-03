@@ -77,12 +77,11 @@ export function ChatBot({ isOpen, onClose, userProfile, dailyTargets, todayLog }
     };
   };
 
-  const wordCount = (text: string) => text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-  const WORD_LIMIT = 70;
+  const CHAR_LIMIT = 100;
 
   const send = async (text: string) => {
     if (!text.trim() || loading) return;
-    if (wordCount(text) > WORD_LIMIT) return;
+    if (text.length > CHAR_LIMIT) return;
     const userMsg: ChatMessage = { role: 'user', content: text };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
@@ -178,22 +177,22 @@ export function ChatBot({ isOpen, onClose, userProfile, dailyTargets, todayLog }
             ref={inputRef}
             type="text"
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value.slice(0, CHAR_LIMIT + 10))}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send(input)}
             placeholder="Rašykite klausimą apie mitybą..."
-            className={`flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 ${wordCount(input) > WORD_LIMIT ? 'focus:ring-red-300 ring-2 ring-red-300' : 'focus:ring-primary-300'}`}
+            className={`flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 ${input.length > CHAR_LIMIT ? 'focus:ring-red-300 ring-2 ring-red-300' : 'focus:ring-primary-300'}`}
           />
           <button
             onClick={() => send(input)}
-            disabled={!input.trim() || loading || wordCount(input) > WORD_LIMIT}
+            disabled={!input.trim() || loading || input.length > CHAR_LIMIT}
             className="w-10 h-10 bg-primary-500 text-white rounded-full flex items-center justify-center disabled:opacity-40 active:scale-90 transition-transform shadow-md shadow-primary-200 shrink-0"
           >
             <Send size={16} />
           </button>
         </div>
-        {wordCount(input) > 0 && (
-          <p className={`text-right text-[11px] mt-1 pr-1 ${wordCount(input) > WORD_LIMIT ? 'text-red-400 font-medium' : 'text-gray-300'}`}>
-            {wordCount(input)}/{WORD_LIMIT} žodžių
+        {input.length > 0 && (
+          <p className={`text-right text-[11px] mt-1 pr-1 ${input.length > CHAR_LIMIT ? 'text-red-400 font-medium' : 'text-gray-300'}`}>
+            {input.length}/{CHAR_LIMIT}
           </p>
         )}
       </div>

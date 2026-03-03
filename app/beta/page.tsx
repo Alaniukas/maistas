@@ -395,15 +395,6 @@ export default function App() {
 
       {/* Main Content */}
       <main className="max-w-md mx-auto relative">
-        {/* Check-in Floating Button */}
-        {currentView === 'dashboard' && (
-          <button
-            onClick={() => setShowCheckin(true)}
-            className="fixed right-4 bottom-28 z-40 bg-gradient-to-br from-indigo-500 to-purple-600 p-3 rounded-full shadow-xl shadow-indigo-200 text-white border-2 border-white active:scale-90 transition-transform animate-bounce-slow"
-          >
-            <Zap size={24} fill="white" />
-          </button>
-        )}
 
         {currentView === 'dashboard' && (
           <div className="p-4">
@@ -486,40 +477,44 @@ export default function App() {
       )}
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-100 px-2 py-2 flex justify-around items-center z-20 pb-safe">
-        <NavBtn
-          label="Diena"
-          icon={<LayoutDashboard size={22} strokeWidth={currentView === 'dashboard' ? 2.5 : 2} />}
-          active={currentView === 'dashboard'}
-          onClick={() => setCurrentView('dashboard')}
-        />
-        <NavBtn
-          label="Planas"
-          icon={<ClipboardList size={22} strokeWidth={currentView === 'plan' ? 2.5 : 2} />}
-          active={currentView === 'plan'}
-          onClick={() => setCurrentView('plan')}
-        />
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-100 z-20 pb-safe">
+        <div className="max-w-md mx-auto grid grid-cols-5 items-end px-1 py-2">
+          <NavBtn
+            label="Diena"
+            icon={<LayoutDashboard size={22} strokeWidth={currentView === 'dashboard' ? 2.5 : 2} />}
+            active={currentView === 'dashboard'}
+            onClick={() => setCurrentView('dashboard')}
+          />
+          <NavBtn
+            label="Planas"
+            icon={<ClipboardList size={22} strokeWidth={currentView === 'plan' ? 2.5 : 2} />}
+            active={currentView === 'plan'}
+            onClick={() => setCurrentView('plan')}
+          />
 
-        {/* Center Add Button */}
-        <button
-          onClick={() => { setSelectedMeal(null); setCurrentView('addFood'); }}
-          className="flex items-center justify-center -mt-8 bg-primary-500 text-white w-16 h-16 rounded-full shadow-xl shadow-primary-200 border-4 border-white active:scale-95 transition-transform"
-        >
-          <PlusCircle size={30} />
-        </button>
+          {/* Center Add Button */}
+          <div className="flex justify-center">
+            <button
+              onClick={() => { setSelectedMeal(null); setCurrentView('addFood'); }}
+              className="flex items-center justify-center -translate-y-3 bg-primary-500 text-white w-14 h-14 rounded-full shadow-xl shadow-primary-200 border-4 border-white active:scale-95 transition-transform"
+            >
+              <PlusCircle size={26} />
+            </button>
+          </div>
 
-        <NavBtn
-          label="Pokalbis"
-          icon={<MessageCircle size={22} strokeWidth={showChat ? 2.5 : 2} />}
-          active={showChat}
-          onClick={() => setShowChat(true)}
-        />
-        <NavBtn
-          label="Nustatymai"
-          icon={<Settings2 size={22} strokeWidth={currentView === 'settings' ? 2.5 : 2} />}
-          active={currentView === 'settings'}
-          onClick={() => setCurrentView('settings')}
-        />
+          <NavBtn
+            label="Pokalbis"
+            icon={<MessageCircle size={22} strokeWidth={showChat ? 2.5 : 2} />}
+            active={showChat}
+            onClick={() => setShowChat(true)}
+          />
+          <NavBtn
+            label="Nustatymai"
+            icon={<Settings2 size={22} strokeWidth={currentView === 'settings' ? 2.5 : 2} />}
+            active={currentView === 'settings'}
+            onClick={() => setCurrentView('settings')}
+          />
+        </div>
       </nav>
     </div>
   );

@@ -49,7 +49,7 @@ Jei klausia ar viršijo limitą – pasakyk konkrečiai pagal duomenis.`;
       contents,
       config: {
         systemInstruction,
-        maxOutputTokens: 500,
+        maxOutputTokens: 1000,
         temperature: 0.6,
       },
     });
