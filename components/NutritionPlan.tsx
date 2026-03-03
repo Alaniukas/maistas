@@ -61,7 +61,7 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     key: 'foodType',
-    label: 'Kokio tipo maistą teikiate pirmenybę?',
+    label: 'Kokio tipo maistui teikiate pirmenybę?',
     emoji: '🍽️',
     options: ['Tradicinis lietuviškas', 'Tarptautinė virtuvė', 'Augalinis / veganiška', 'Vegetariška', 'Keto / mažai angliavandenių', 'Bet koks'],
     allowCustom: true,
