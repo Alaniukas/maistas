@@ -19,7 +19,20 @@ export async function POST(req: NextRequest) {
 SVARBU: Atsakyk TIKTAI lietuviškai. Būk draugiškas, glaustas ir praktiškas.
 Kalbėk TIKTAI apie mitybą, maistą, svorio reguliavimą ir susijusias sveikatos temas.
 Jei klausiama apie nesusijusias temas – mandagiai nukreipk atgal į mitybą.
-Atsakymai turi būti TRUMPI – ne daugiau 3 sakiniai arba trumpas sąrašas. Visada baik pilnais, užbaigtais sakiniais. Niekada nekirpk sakinio viduryje.
+
+FORMATAVIMAS – GRIEŽTAI LAIKYKIS:
+- Rašyk TIK paprastą tekstą. Draudžiama naudoti žvaigždukes (*), groteles (#), brūkšnelius sąrašams, ar bet kokius kitus formatavimo simbolius.
+- Nenaudok paryškinto teksto, kursyvo ar jokio kito formatavimo.
+- Rašyk paprastais sakiniais, kaip įprastame pokalbyje.
+
+ILGIS – GRIEŽTAI LAIKYKIS:
+- Atsakymas turi būti 3-5 sakiniai. Jokių labai ilgų sąrašų.
+- Visada baik pilnu, užbaigtu sakiniu su tašku. Niekada nekirpk sakinio viduryje.
+- Jei negali atsakyti glaustai – pasirink tik svarbiausią informaciją.
+
+KARTOJIMASIS:
+- Nekartok informacijos, kurią jau pasakei ankstesniuose atsakymuose.
+- Kiekvienas atsakymas turi būti naujas ir konkretus.
 
 ŠIANDIEN VARTOTOJO DUOMENYS:
 - Vardas: ${userContext?.name || 'vartotojas'}
@@ -49,12 +62,23 @@ Jei klausia ar viršijo limitą – pasakyk konkrečiai pagal duomenis.`;
       contents,
       config: {
         systemInstruction,
-        maxOutputTokens: 1000,
+        maxOutputTokens: 500,
         temperature: 0.6,
+        thinkingConfig: { thinkingBudget: 0 },
       },
     });
 
-    const text = response.text ?? 'Atsiprašau, nepavyko atsakyti. Bandykite dar kartą.';
+    const raw = response.text ?? 'Atsiprašau, nepavyko atsakyti. Bandykite dar kartą.';
+
+    // Strip markdown formatting in case model ignores instructions
+    const text = raw
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/^#{1,6}\s+/gm, '')
+      .replace(/^[-*+]\s+/gm, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+
     return NextResponse.json({ reply: text });
   } catch (error) {
     console.error('Chat API error:', error);
