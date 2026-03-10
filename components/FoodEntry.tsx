@@ -58,12 +58,12 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
   const handleSearch = useCallback((q: string) => {
     setQuery(q);
     setSelected(null);
-    if (q.length < 1) { setResults([]); setShowDropdown(false); return; }
+    setShowDropdown(true);
+    if (q.length < 1) { setResults([]); return; }
 
     // Show local results immediately
     const local = searchLocalFood(q);
     setResults(local);
-    setShowDropdown(true);
 
     // Debounce remote search
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -307,7 +307,7 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
                   type="text"
                   value={query}
                   onChange={e => handleSearch(e.target.value)}
-                  onFocus={() => results.length > 0 && setShowDropdown(true)}
+                  onFocus={() => setShowDropdown(true)}
                   placeholder="Ieškoti maisto produkto..."
                   className="w-full pl-9 pr-10 py-3 bg-white rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
                   autoFocus={!initialItem}
@@ -324,8 +324,13 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
               </div>
 
               {/* Live dropdown */}
-              {showDropdown && results.length > 0 && !selected && (
+              {showDropdown && !selected && (
                 <div className="absolute top-full left-0 right-0 bg-white rounded-xl shadow-lg border border-gray-100 z-20 mt-1 max-h-72 overflow-y-auto">
+                  {searching && results.length === 0 && (
+                    <div className="px-4 py-3 text-center text-sm text-gray-400 flex items-center justify-center gap-2">
+                      <Loader2 size={14} className="animate-spin text-primary-400" /> Ieškoma...
+                    </div>
+                  )}
                   {results.map(r => (
                     <button
                       key={r.id}
@@ -341,32 +346,32 @@ export function FoodEntry({ onAdd, onCancel, mealType, initialItem }: Props) {
                       </div>
                     </button>
                   ))}
-                  {/* AI estimate option */}
-                  {query.length >= 2 && (
-                    <button
-                      onMouseDown={handleEstimate}
-                      className="w-full flex items-center gap-2 px-4 py-3 text-left bg-primary-50 hover:bg-primary-100 border-t border-primary-100"
-                    >
-                      {estimating ? <Loader2 size={14} className="animate-spin text-primary-500" /> : <span>✨</span>}
-                      <div>
-                        <p className="text-sm font-medium text-primary-600">AI įvertinimas: „{query}"</p>
-                        <p className="text-xs text-primary-400">Gemini apskaičiuos maistinę vertę</p>
-                      </div>
-                    </button>
+                  {!searching && query.length > 0 && results.length === 0 && (
+                    <div className="px-4 py-3 text-center text-sm text-gray-400">
+                      Nerasta rezultatų
+                    </div>
                   )}
+                  {/* AI estimate option */}
+                  <button
+                    onMouseDown={(e) => {
+                      if (!query.trim()) {
+                        e.preventDefault();
+                        toast('Įveskite maistą, kurį norite įvertinti su AI', { icon: 'ℹ️' });
+                        return;
+                      }
+                      handleEstimate();
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-3 text-left bg-primary-50 hover:bg-primary-100 border-t border-primary-100"
+                  >
+                    {estimating ? <Loader2 size={14} className="animate-spin text-primary-500" /> : <span>✨</span>}
+                    <div>
+                      <p className="text-sm font-medium text-primary-600">
+                        {query.trim() ? `Klauskite AI: „${query}"` : 'Klauskite AI aprašydami maistą'}
+                      </p>
+                      <p className="text-xs text-primary-400">Gemini apskaičiuos maistinę vertę</p>
+                    </div>
+                  </button>
                 </div>
-              )}
-
-              {/* AI estimate button when no dropdown */}
-              {query.length >= 2 && !showDropdown && !selected && (
-                <button
-                  onClick={handleEstimate}
-                  disabled={estimating}
-                  className="w-full mt-2 flex items-center gap-2 px-4 py-3 bg-white rounded-xl border border-primary-200 text-primary-600 text-sm font-medium active:scale-95 transition-transform"
-                >
-                  {estimating ? <Loader2 size={16} className="animate-spin" /> : <span>✨</span>}
-                  AI įvertinti „{query}"
-                </button>
               )}
             </div>
           </div>
