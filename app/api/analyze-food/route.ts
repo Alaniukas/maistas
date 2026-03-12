@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Nuotrauka privaloma' }, { status: 400 });
     }
 
-    const response = await ai.models.generateContent({
+    let response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: [
         {
@@ -68,10 +68,48 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const text = response.text;
+    let text = response.text;
     if (!text) throw new Error('Tuščias atsakymas');
 
-    const result = JSON.parse(text);
+    let result = JSON.parse(text);
+
+    // Jei nerado jokio produkto, bandome ilgesnę paiešką ieškant kažko panašaus
+    if (!result.items || result.items.length === 0) {
+      console.log('Pirmu bandymu produktų nerasta, bandoma detali analizė su gemini-2.5-pro...');
+      const retryResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-pro',
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                inlineData: {
+                  mimeType,
+                  data: base64Image,
+                },
+              },
+              {
+                text: `Prieš tai atliekant greitą paiešką nepavyko rasti produkto. Prašau paieškoti ilgiau ir atidžiau.
+                Jeigu blogiausiu atveju nerandi vaizduojamo produkto, pabandyk surasti kažką panašaus (nebūtinai identiško) pagal išvaizdą, spalvą ar formą.
+                Geriau grąžinti panašiausią atitikmenį nei nieko. Pateik apytikslę maistinę vertę ir porciją.`,
+              },
+            ],
+          },
+        ],
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: nutritionSchema,
+          systemInstruction: `Tu esi dietologas. Privalai nuotraukoje atrasti maistą, net jei jis sunkiai atpažįstamas.
+          Naudok lietuviškus pavadinimus. Jei tiksliai nežinai, prirašyk "(Panašu į ...)".`,
+        },
+      });
+
+      if (retryResponse.text) {
+        text = retryResponse.text;
+        result = JSON.parse(text);
+      }
+    }
+
     return NextResponse.json(result);
   } catch (error) {
     console.error('Analyze food error:', error);
